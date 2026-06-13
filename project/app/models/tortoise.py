@@ -9,3 +9,4 @@ class TextSummary(models.Model):    # Table
     
     def __str__(self):
         return self.url
+    
