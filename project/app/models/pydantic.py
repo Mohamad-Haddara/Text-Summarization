@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+
+
+
 class SummaryPayloadSchema(BaseModel):
     url: str
     
@@ -7,3 +10,4 @@ class SummaryPayloadSchema(BaseModel):
 # SummaryResponseSchema inherits from SummaryPayloadSchema model, adding id field
 class SummaryResponseSchema(SummaryPayloadSchema):
     id: int
+    

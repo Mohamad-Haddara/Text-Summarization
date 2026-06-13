@@ -8,3 +8,37 @@ def test_create_summary(test_app_with_db):
     assert response.status_code == 201
     # Parse the response body from JSON into a dict, grab the "url" field, and verify it matches the URL we expected
     assert response.json()["url"] == "https://foo.bar" 
+    
+def test_create_summaries_invalid_json(test_app):
+    response = test_app.post("/summaries/", data=json.dumps({}))
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "input": {},
+                "loc": ["body", "url"],
+                "msg": "Field required",
+                "type": "missing",
+            }
+        ]
+    }
+    
+def test_read_summary(test_app_with_db):
+    response = test_app_with_db.post("/summaries/", data= json.dumps({"url":"https://foo.bar"}))
+    summary_id = response.json()["id"]
+    
+    response = test_app_with_db.get("/summaries/{summaries}/")
+    assert response.status == 200
+    
+    # Parse the response body from JSON into dict
+    response_dict = response.json()
+    assert response_dict["id"] == summary_id
+    assert response_dict["url"] == "https://foo.bar"
+    assert response_dict["summary"]
+    assert response_dict["created_at"]
+    
+def test_read_summary_incorrect_id(test_app_with_db):
+    response = test_app_with_db.get("/summaries/999")
+    
+    assert response.status_code == 404
+    assert response.json()["details"] == "Summary not found"
