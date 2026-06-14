@@ -1,4 +1,6 @@
 from tortoise import fields, models
+from tortoise.contrib.pydantic import pydantic_model_creator  # new
+
 
 # Create new database model
 class TextSummary(models.Model):    # Table
@@ -9,3 +11,6 @@ class TextSummary(models.Model):    # Table
     
     def __str__(self):
         return self.url
+
+
+SummarySchema = pydantic_model_creator(TextSummary)
